@@ -1,31 +1,34 @@
-library(rhdf5)
+rm(list = ls()); setwd("~/Dropbox/GitHub/Cortex")
 
-rm(list = ls())
-setwd("~/Desktop/SC2015")
+library(dplyr)
 
-h5createFile("sc3005.h5")
-h5createGroup("sc3005.h5", "raw")
+data <- list()
 
-h5ls("sc3005.h5")
+data$mRNA <- read.delim("data/expression_mRNA_17-Aug-2014.txt.gz", stringsAsFactors = F)
+data$mito <- read.delim("data/expression_mito_17-Aug-2014.txt.gz", stringsAsFactors = F)
+data$spikes <- read.delim("data/expression_spikes_17-Aug-2014.txt.gz", stringsAsFactors = F)
 
-mito <- read.delim("expression_mito_17-Aug-2014.txt", stringsAsFactors = F)
-mRNA <- read.delim("expression_mRNA_17-Aug-2014.txt", stringsAsFactors = F)
-spikes <- read.delim("expression_spikes_17-Aug-2014.txt", stringsAsFactors = F)
+level1class <- data$mRNA[8, -c(1:2)] %>% as.character
+level2class <- data$mRNA[9, -c(1:2)] %>% as.character 
 
-x = as.data.frame(matrix(1, nrow = 1e4, ncol = 1e4))
+mRNA <- data$mRNA[-c(1:10), -c(1:2)] %>% apply(2, as.numeric) %>% as.data.frame 
+level2avg <- sapply(1:nrow(mRNA), function(x) tapply(as.matrix(mRNA[x, ]), level2class, mean)) %>% t
+rownames(level2avg) <- data$mRNA[-c(1:10), 1]
 
-df = data.frame(1L:5L,seq(0,1,length.out=5), c("ab","cde","fghi","a","s"), stringsAsFactors=FALSE)
+data$level2avg <- as.data.frame(level2avg)
+save(data, file = "data.rdt")
 
-print(object.size(mRNA), units = "Gb")
-print(object.size(x), units = "Gb")
+load("data.rdt")
+level2avg <- data$level2avg %>% as.matrix
+barplot(level2avg["App", ], las = 2)
+barplot(level2avg["Stat3", ], las = 2)
 
-h5write(df, "sc3005.h5", "df")
-h5write(as.matrix(mRNA), "sc3005.h5", "mRNA")
-h5write(mito[1:20, 1:5], "sc3005.h5", "raw/mito5")
+mRNA <- data$mRNA[-c(1:10), -c(1:2)] %>% apply(2, as.numeric) %>% as.data.frame 
+rownames(mRNA) <- rownames(level2avg)
+summary(c(as.matrix(mRNA["Stat3", ])))
 
-h5createDataset("sc3005.h5", "mRNA1", dims = dim(mRNA), storage.mode = storage.mode(mRNA), chunk= c(dim(mRNA)[1], dim(mRNA)[2],1,1))
-h5createDataset("sc3005.h5", "raw/mRNA2", dim(mRNA), chunk = c(5, 1), level = 7)
-h5write(mRNA, "sc3005.h5", name = "raw/mRNA2")
-
-a = rep(10, 10)
-h5write(a, "sc3005.h5", "raw/mito")
+allen <- read.xlsx(file = "../Adsp/GWAS/table_new.xlsx", sheetName = "ALLEN") 
+adsp <- level2avg[rownames(level2avg) %in% as.character(allen$SYMBOL), ]
+lapply(1:nrow(adsp), function(x) barplot(adsp[x, ], las = 2, main = rownames(adsp)[x]))
+barplot(adsp["Ryr2", ], las = 2)
+barplot(level2avg["Apoe", ], las = 2)

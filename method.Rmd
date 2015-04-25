@@ -1,0 +1,28 @@
+# Single cell RNA-seq
+
+## Single cell transcriptome of 3005 cortical cells
+
+** Cell types in the mouse cortex and hippocampus revealed by single-cell RNA-seq **    
+* Sten Linnarsson @ Karolinska Institute, Sweden *   
+
+- Individual RNA molecules were counted using unique molecular identifiers
+- Molecularly distinct classes of cells were identified by clustering (9 major classes and 47 subclasses)
+- Cell type-specific markers were identified: S1 pyramidal cells (Tbr1), oligodendrocytes (Hapln2), Hippocampal pyramidal neurons (Spink8), interneuron (Pnoc)
+
+## The raw data
+
+## Discussion
+
+** How to use this data? **
+
+- Markers
+- Correlation
+- Hypergeometric test
+
+<!--
+
+
+cat("test")
+
+-->
+
