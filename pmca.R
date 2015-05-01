@@ -5,13 +5,13 @@ rm(list = ls())
 cadillac <- "/data/xwang/SCR"
 github <- "~/Dropbox/GitHub/SCR"
 
+setwd(cadillac)
+load("fit_sampling.rdt")  # GLM fit with Stan
+
 setwd(github)
 load("./data.rdt")  # Single Cell RNA-seq
 cells <- data$cellInf[8, -1] %>% as.matrix %>% c %>% unique
 load("rnaseq_howell.rdt")  # Cortex RNA-seq (Time series trans-APP)
-
-setwd(cadillac)
-load("fit_sampling.rdt")  # GLM fit with Stan
 
 # Gene expression per cell type as GLM estimations's mode
 mode <- sapply(fit, function(x) {
