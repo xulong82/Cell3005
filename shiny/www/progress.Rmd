@@ -1,0 +1,50 @@
+## Integrate single cell RNA-seq data to infer cell compositions in tissue-wise gene expression measurements
+
+***
+
+#### Single cell transcriptome of 3005 cortical cells
+
+- Individual RNA molecules were counted using unique molecular identifiers
+- Molecularly distinct classes of cells were identified by clustering (9 major classes and 47 subclasses)
+- Cell type-specific markers were identified: Oligodendrocytes (Hapln2), Hippocampal pyramidal neurons (Spink8)
+
+***
+
+#### Generalized linear model
+
+GLM was used to decompose gene expression to each cell type
+
+$\mu = \beta_{astrocyte} * astrocyte + \beta_{neuron} * neuron + ... + \beta_{basal} * basal$; $y \sim NB(\mu, \rho)$
+
+***
+
+#### Choose the marker genesets for each cell type
+
+- To assign a gene as a marker of astrocyte, 95% credible interval of the $\beta_{astrocyte}$ from GLM needs to be 3+
+- Repeate for neuron, oligodendrocytes, et al.
+- Remove genes that appear in all cell types
+
+***
+
+#### Correlate SCR and Howell's RNA-seq from mice cortex with PMCA based on the marker genesets
+
+Robyn's method: PMCA
+
+***
+
+#### Enriched cells for a group of genes
+
+Hypergeometric test
+
+***
+
+#### Reference
+
+Cell types in the mouse cortex and hippocampus revealed by single-cell RNA-seq     
+*Sten Linnarsson @ Karolinska Institute, Sweden*   
+
+<!--
+
+cat("test")
+
+-->
