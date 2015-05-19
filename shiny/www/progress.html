@@ -64,23 +64,25 @@ img {
 <div id="integrate-single-cell-rna-seq-data-to-infer-cell-compositions-in-tissue-wise-gene-expression-measurements" class="section level2">
 <h2>Integrate single cell RNA-seq data to infer cell compositions in tissue-wise gene expression measurements</h2>
 <hr />
-<div id="single-cell-transcriptome-of-3005-cortical-cells" class="section level4">
-<h4>Single cell transcriptome of 3005 cortical cells</h4>
+<div id="the-raw-data-single-cell-transcriptome-of-3005-cortical-cells" class="section level4">
+<h4>1. The raw data: single cell transcriptome of 3005 cortical cells</h4>
 <ul>
 <li>Individual RNA molecules were counted using unique molecular identifiers</li>
 <li>Molecularly distinct classes of cells were identified by clustering (9 major classes and 47 subclasses)</li>
-<li>Cell type-specific markers were identified: Oligodendrocytes (Hapln2), Hippocampal pyramidal neurons (Spink8)</li>
+<li>Reference: Cell types in the mouse cortex and hippocampus revealed by single-cell RNA-seq. <em>Science. 2015. Sten Linnarsson</em></li>
 </ul>
 <hr />
 </div>
-<div id="generalized-linear-model" class="section level4">
-<h4>Generalized linear model</h4>
-<p>GLM was used to decompose gene expression to each cell type</p>
-<p><span class="math">\(\mu = \beta_{astrocyte} * astrocyte + \beta_{neuron} * neuron + ... + \beta_{basal} * basal\)</span>; <span class="math">\(y \sim NB(\mu, \rho)\)</span></p>
+<div id="we-used-a-generalized-linear-model-to-decompose-the-47-cell-types-gene-expression-profiles" class="section level4">
+<h4>2. We used a generalized linear model to decompose the 47 cell type’s gene expression profiles</h4>
+<ul>
+<li><span class="math">\(\mu = \beta_{astrocyte} * astrocyte + \beta_{neuron} * neuron + ... + \beta_{basal} * basal\)</span><br /></li>
+<li><span class="math">\(y \sim NB(\mu, \rho)\)</span></li>
+</ul>
 <hr />
 </div>
-<div id="choose-the-marker-genesets-for-each-cell-type" class="section level4">
-<h4>Choose the marker genesets for each cell type</h4>
+<div id="marker-genesets-for-the-47-cell-types-were-constructed" class="section level4">
+<h4>3. Marker genesets for the 47 cell types were constructed</h4>
 <ul>
 <li>To assign a gene as a marker of astrocyte, 95% credible interval of the <span class="math">\(\beta_{astrocyte}\)</span> from GLM needs to be 3+</li>
 <li>Repeate for neuron, oligodendrocytes, et al.</li>
@@ -88,19 +90,26 @@ img {
 </ul>
 <hr />
 </div>
+<div id="infer-a-particular-genesets-cell-origin-by-testing-its-enrichment-of-the-marker-genes" class="section level4">
+<h4>4. Infer a particular geneset’s cell origin by testing its enrichment of the marker genes</h4>
+<ul>
+<li>Hypergeometric test with the input genesets and 47 marker genesets.</li>
+</ul>
+<hr />
+</div>
 <div id="correlate-scr-and-howells-rna-seq-from-mice-cortex-with-pmca-based-on-the-marker-genesets" class="section level4">
-<h4>Correlate SCR and Howell’s RNA-seq from mice cortex with PMCA based on the marker genesets</h4>
-<p>Robyn’s method: PMCA</p>
-<hr />
+<h4>5. Correlate SCR and Howell’s RNA-seq from mice cortex with PMCA based on the marker genesets</h4>
+<ul>
+<li>Robyn’s method: PMCA (in progress…)</li>
+</ul>
 </div>
-<div id="enriched-cells-for-a-group-of-genes" class="section level4">
-<h4>Enriched cells for a group of genes</h4>
-<p>Hypergeometric test</p>
+<div id="discussion" class="section level4">
+<h4>6. Discussion</h4>
+<ul>
+<li>Hypergeometric test’s background genes number determines the p-value. Permutation?</li>
+<li>Dispersion of a gene’s expression estimation is an issue. 95% credible interval sometimes wide.</li>
+</ul>
 <hr />
-</div>
-<div id="reference" class="section level4">
-<h4>Reference</h4>
-<p>Cell types in the mouse cortex and hippocampus revealed by single-cell RNA-seq<br /><em>Sten Linnarsson @ Karolinska Institute, Sweden</em></p>
 <!--
 
 cat("test")

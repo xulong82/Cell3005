@@ -2,23 +2,22 @@
 
 ***
 
-#### Single cell transcriptome of 3005 cortical cells
+#### 1. The raw data: single cell transcriptome of 3005 cortical cells
 
 - Individual RNA molecules were counted using unique molecular identifiers
 - Molecularly distinct classes of cells were identified by clustering (9 major classes and 47 subclasses)
-- Cell type-specific markers were identified: Oligodendrocytes (Hapln2), Hippocampal pyramidal neurons (Spink8)
+- Reference: Cell types in the mouse cortex and hippocampus revealed by single-cell RNA-seq. *Science. 2015. Sten Linnarsson*  
 
 ***
 
-#### Generalized linear model
+#### 2. We used a generalized linear model to decompose the 47 cell type's gene expression profiles
 
-GLM was used to decompose gene expression to each cell type
-
-$\mu = \beta_{astrocyte} * astrocyte + \beta_{neuron} * neuron + ... + \beta_{basal} * basal$; $y \sim NB(\mu, \rho)$
+- $\mu = \beta_{astrocyte} * astrocyte + \beta_{neuron} * neuron + ... + \beta_{basal} * basal$  
+- $y \sim NB(\mu, \rho)$
 
 ***
 
-#### Choose the marker genesets for each cell type
+#### 3. Marker genesets for the 47 cell types were constructed
 
 - To assign a gene as a marker of astrocyte, 95% credible interval of the $\beta_{astrocyte}$ from GLM needs to be 3+
 - Repeate for neuron, oligodendrocytes, et al.
@@ -26,22 +25,22 @@ $\mu = \beta_{astrocyte} * astrocyte + \beta_{neuron} * neuron + ... + \beta_{ba
 
 ***
 
-#### Correlate SCR and Howell's RNA-seq from mice cortex with PMCA based on the marker genesets
+#### 4. Infer a particular geneset's cell origin by testing its enrichment of the marker genes
 
-Robyn's method: PMCA
-
-***
-
-#### Enriched cells for a group of genes
-
-Hypergeometric test
+- Hypergeometric test with the input genesets and 47 marker genesets.
 
 ***
 
-#### Reference
+#### 5. Correlate SCR and Howell's RNA-seq from mice cortex with PMCA based on the marker genesets
 
-Cell types in the mouse cortex and hippocampus revealed by single-cell RNA-seq     
-*Sten Linnarsson @ Karolinska Institute, Sweden*   
+- Robyn's method: PMCA (in progress...)
+
+#### 6. Discussion
+
+- Hypergeometric test's background genes number determines the p-value. Permutation?
+- Dispersion of a gene's expression estimation is an issue. 95% credible interval sometimes wide.
+
+***
 
 <!--
 

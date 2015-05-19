@@ -23,3 +23,9 @@ data$level1avg <- as.data.frame(level1avg)
 data$level2avg <- as.data.frame(level2avg)
 
 save(data, file = "./data.rdt")
+
+class <- cbind(level1class, level2class) %>% as.data.frame
+class <- class[! duplicated(class), ] %>% filter(level2class != "(none)")
+save(class, file = "./class.rdt")
+
+ggplot()

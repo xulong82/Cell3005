@@ -20,11 +20,9 @@ load("./data.rdt")
 
 basal <- data$cellInf[2, -1] %>% as.matrix %>% as.numeric
 
-type1 <- data$cellInf[8, -1] %>% as.matrix %>% c  # type level 1
-x <- sapply(unique(type1), function(x) as.numeric(type1 == x))
-
-# type2 <- data$cellInf[9, -1] %>% as.matrix %>% c  # type level 2
-# x <- sapply(unique(type2), function(x) as.numeric(type2 == x))
+# type <- data$cellInf[8, -1] %>% as.matrix %>% c  # type level 1
+type <- data$cellInf[9, -1] %>% as.matrix %>% c  # type level 2
+x <- sapply(unique(type), function(x) as.numeric(type == x))
 
 x <- cbind(x, basal = basal / mean(basal))
 
@@ -34,7 +32,7 @@ ge <- data$mRNA[-c(1:10), -c(1:2)] %>% apply(2, as.numeric)
 rownames(ge) <- data$mRNA[-c(1:10), 1]
 
 # Choose genes
-ge <- ge[apply(ge, 1, function(x) sum(x > 10) > 10), ]
+ge <- ge[apply(ge, 1, function(x) sum(x > 10) > 1), ]
 
 # PC
 u.core <- round(nrow(ge) / 20)

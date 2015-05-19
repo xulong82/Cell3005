@@ -6,14 +6,16 @@ cadillac <- "/data/xwang/SCR"
 github <- "~/Dropbox/GitHub/SCR"
 
 setwd(cadillac)
-load("fit_sampling.rdt")  # GLM fit with Stan
+load("level2/fit_sampling.rdt")  # GLM fit with Stan
 
 setwd(github)
+load("rnaseq_howell.rdt")  # RNA-seq (Time series trans-APP)
 load("./data.rdt")  # Single Cell RNA-seq
-cells <- data$cellInf[8, -1] %>% as.matrix %>% c %>% unique
-load("rnaseq_howell.rdt")  # Cortex RNA-seq (Time series trans-APP)
+# cells <- data$cellInf[8, -1] %>% as.matrix %>% c %>% unique  # level 1
+cells <- data$cellInf[9, -1] %>% as.matrix %>% c %>% unique  # level 2
 
-# Gene expression per cell type as GLM estimations's mode
+# Gene expression as GLM estimations's mode
+
 mode <- sapply(fit, function(x) {
   as.data.frame(x) %>% select(contains("beta")) %>%
   apply(2, function(y) {  # mode
@@ -23,20 +25,39 @@ mode <- sapply(fit, function(x) {
 colnames(mode) <- c(cells, "basal")
 
 # 95 credible interval: low end
+
 summary <- lapply(fit, function(x) summary(x)$summary)
-ci95 <- sapply(summary, function(x) x[, "2.5%"]) %>% t %>% as.data.frame %>% select(contains("beta"))
-colnames(ci95) <- c(cells, "basal")
-genes <- rownames(ci95)
+ci95_lo <- sapply(summary, function(x) x[, "2.5%"]) %>% t %>% as.data.frame %>% select(contains("beta"))
+ci95_hi <- sapply(summary, function(x) x[, "97.5%"]) %>% t %>% as.data.frame %>% select(contains("beta"))
+colnames(ci95_lo) <- colnames(ci95_hi) <- c(cells, "basal")
+
+ci25 <- sapply(summary, function(x) x[, "25%"]) %>% t %>% as.data.frame %>% select(contains("beta"))
+ci75 <- sapply(summary, function(x) x[, "75%"]) %>% t %>% as.data.frame %>% select(contains("beta"))
+colnames(ci25) <- colnames(ci75) <- c(cells, "basal")
 
 # Markers
-marker <- lapply(cells, function(x) genes[ci95[, x] > 3])
-names(marker) <- cells
-marker <- lapply(marker, function(x) x[! x%in% names(which(table(do.call(c, marker)) == 7))])
-marker <- lapply(marker, function(x) x[x %in% rownames(howell)])
+
+marker <- sapply(cells, function(x) rownames(ci95_lo)[ci95_lo[, x] > 3])
+marker <- lapply(marker, function(x) x[! x%in% names(which(table(do.call(c, marker)) == length(cells)))])
+
+# Enrichment
+
+load("shiny/shinyList.rdt")  # background
+for(obj in names(shinyList)) assign(obj, shinyList[[obj]])
+
+myhyper <- function(g1, g2) {  # Hypergeometric
+  if(length(intersect(g1, g2)) == 0) return(1)
+  1 - phyper(length(intersect(g1, g2)) - 1, length(g2), length(setdiff(bg, g2)), length(g1))
+}  # Pr(count >= length(intersect(g1, g2)))
+
+lapply(marker, function(x) myhyper(symbols, x))
 
 # X[sample, marker] and Y[cell, marker] matrices
+
+marker <- lapply(marker, function(x) x[x %in% rownames(howell)])
+
 X <- sapply(marker, function(x) apply(howell[x, ], 2, mean))
-Y <- sapply(marker, function(x) apply(mode[x, cells], 2, function(y) median(y) / mad(y)))
+Y <- sapply(marker, function(x) apply(mode[x, names(marker)], 2, function(y) median(y) / mad(y)))
 
 pmca <- list()
 pmca$X <- X
