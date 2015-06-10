@@ -6,7 +6,8 @@ library(ggplot2)
 load("shinyList.rdt")
 
 bg <- shinyList$bg
-marker <- shinyList$marker
+marker <- shinyList$marker1
+KEGG <- shinyList$KEGG
 class <- shinyList$class
 mode <- shinyList$mode
 ci95_lo <- as.matrix(shinyList$ci95_lo)
@@ -41,10 +42,18 @@ shinyServer(function(input, output) {
     
   })
   
+  output$geneList <- renderText({
+    paste(marker[[input$cell]], collapse = ", ")
+  })
+  
+  output$kegg <- renderTable({
+    KEGG[[input$cell]]
+  })
+  
   get.text <- reactive({
     input$geneList
   })  
-  
+ 
   output$enrichment <- renderPlot({
     
     symbols = as.matrix(read.table(text = get.text()))

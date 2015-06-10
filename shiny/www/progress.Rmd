@@ -31,14 +31,9 @@
 
 ***
 
-#### 5. Correlate SCR and Howell's RNA-seq from mice cortex with PMCA based on the marker genesets
+#### 5. Correlate SCR and Howell's RNA-seq from mice cortex with PMCA
 
-- Robyn's method: PMCA (in progress...)
-
-#### 6. Discussion
-
-- Hypergeometric test's background genes number determines the p-value. Permutation?
-- Dispersion of a gene's expression estimation is an issue. 95% credible interval sometimes wide.
+- Robyn's method: PMCA 
 
 ***
 
