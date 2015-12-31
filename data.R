@@ -1,3 +1,4 @@
+library(xlsx)
 library(dplyr)
 
 rm(list = ls())
@@ -27,3 +28,6 @@ save(data, file = "./data.rdt")
 class <- cbind(level1class, level2class) %>% as.data.frame
 class <- class[! duplicated(class), ] %>% filter(level2class != "(none)")
 save(class, file = "./class.rdt")
+
+barres <- read.xlsx("raw/barreslab_rnaseq.xlsx", sheetIndex = 1, stringsAsFactors = F)
+save(barres, file = "Rdt/barres.rdt")

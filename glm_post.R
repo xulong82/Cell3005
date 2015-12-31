@@ -3,7 +3,7 @@ library(rstan)  # R/3.1.1
 
 rm(list = ls())
 cadillac <- "/data/xwang/SCR"
-github <- "~/Dropbox/GitHub/SCR"
+github <- "~/Dropbox/GitHub/Brain"
 
 setwd(cadillac)
 load("level2/fit_sampling.rdt")  # GLM fit with Stan
